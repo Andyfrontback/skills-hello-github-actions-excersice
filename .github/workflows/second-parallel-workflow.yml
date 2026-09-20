@@ -1,0 +1,38 @@
+name: Mapa de Procesos - Orquestación Visual
+
+on: [workflow_dispatch]
+
+jobs:
+  # 1. Punto de partida (Un solo bloque)
+  inicio_proyecto:
+    name: 🏁 Toma de Requerimientos
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Definiendo qué hará el producto final."
+
+  # 2A. Rama de Software (Se ejecuta en paralelo a HW)
+  procesos_software:
+    name: 💻 Procesos de Software
+    needs: inicio_proyecto # La flecha sale desde 'inicio_proyecto'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "1. Desarrollo de Firmware"
+      - run: echo "2. Creación de App Móvil"
+
+  # 2B. Rama de Hardware (Se ejecuta en paralelo a SW)
+  procesos_hardware:
+    name: ⚙️ Procesos de Hardware
+    needs: inicio_proyecto # La flecha también sale desde 'inicio_proyecto'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "1. Diseño de Circuitos"
+      - run: echo "2. Impresión 3D de la carcasa"
+
+  # 3. Punto de encuentro (Espera a que ambos terminen)
+  integracion_final:
+    name: 🚀 Integración y Pruebas
+    needs: [procesos_software, procesos_hardware] # Las flechas de SW y HW convergen aquí
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Conectando el software al hardware ensamblado."
+      - run: echo "Ejecutando pruebas de calidad."
