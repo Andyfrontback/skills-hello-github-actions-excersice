@@ -1,6 +1,6 @@
 name: Mapa de Procesos - Matriz
 
-on: [push, workflow_dispatch] # workflow_dispatch permite ejecutarlo manualmente con un botón
+on: workflow_dispatch # workflow_dispatch permite ejecutarlo manualmente con un botón
 
 jobs:
   procesos_division:
