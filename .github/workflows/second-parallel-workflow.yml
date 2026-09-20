@@ -12,26 +12,37 @@ jobs:
 
   # 2A. Rama de Software (Se ejecuta en paralelo a HW)
   procesos_software:
-    name: 💻 Procesos de Software
+    name: 💻 Desarrollo de Firmware
     needs: inicio_proyecto # La flecha sale desde 'inicio_proyecto'
     runs-on: ubuntu-latest
     steps:
       - run: echo "1. Desarrollo de Firmware"
+  procesos_software2:
+    name: Creación de App Móvil
+    needs: procesos_software
+    runs-on: ubuntu-latest
+    steps:
       - run: echo "2. Creación de App Móvil"
 
   # 2B. Rama de Hardware (Se ejecuta en paralelo a SW)
   procesos_hardware:
-    name: ⚙️ Procesos de Hardware
+    name: ⚙️ Diseño de Circuitos
     needs: inicio_proyecto # La flecha también sale desde 'inicio_proyecto'
     runs-on: ubuntu-latest
     steps:
       - run: echo "1. Diseño de Circuitos"
+
+  procesos_hardware2:
+    name: ⚙️ Impresión 3D de la carcasa
+    needs: procesos_hardware # La flecha también sale desde 'inicio_proyecto'
+    runs-on: ubuntu-latest
+    steps:
       - run: echo "2. Impresión 3D de la carcasa"
 
   # 3. Punto de encuentro (Espera a que ambos terminen)
   integracion_final:
     name: 🚀 Integración y Pruebas
-    needs: [procesos_software, procesos_hardware] # Las flechas de SW y HW convergen aquí
+    needs: [procesos_software2, procesos_hardware2] # Las flechas de SW y HW convergen aquí
     runs-on: ubuntu-latest
     steps:
       - run: echo "Conectando el software al hardware ensamblado."
