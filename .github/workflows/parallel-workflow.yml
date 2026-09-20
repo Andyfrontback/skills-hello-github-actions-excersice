@@ -1,39 +1,38 @@
-name: Despliegue Multi-Entorno
+name: Mapa de Procesos - Matriz
 
-on:
-  push:
-    branches:
-      - main
-      - develop
+on: [push, workflow_dispatch] # workflow_dispatch permite ejecutarlo manualmente con un botón
 
 jobs:
-  # ----------------------------------------
-  # JOBS PARA DESARROLLO (Corren en paralelo)
-  # ----------------------------------------
-  migrar_bd_dev:
-    if: github.ref == 'refs/heads/develop'
+  procesos_division:
+    # El nombre del job cambiará dinámicamente en el grafo visual
+    name: División ${{ matrix.division }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # Definimos las dos ramas de nuestro mapa de procesos
+        division: [Software, Hardware]
+    
     steps:
-      - run: echo "Ejecutando scripts específicos de BD para DEV"
+      # ==========================================
+      # PROCESOS EXCLUSIVOS DE SOFTWARE
+      # El estudiante puede agregar más steps aquí abajo
+      # ==========================================
+      - name: 💻 SW - Arquitectura y Diseño
+        if: matrix.division == 'Software'
+        run: echo "Creando diagramas UML y endpoints de la API."
 
-  desplegar_api_dev:
-    if: github.ref == 'refs/heads/develop'
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Desplegando la API en el servidor de DEV"
+      - name: 💻 SW - Desarrollo Backend
+        if: matrix.division == 'Software'
+        run: echo "Programando la lógica de negocio."
 
-  # ----------------------------------------
-  # JOBS PARA PRODUCCIÓN (Totalmente distintos)
-  # ----------------------------------------
-  auditoria_seguridad_prod:
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Corriendo escaneo severo solo requerido para PROD"
+      # ==========================================
+      # PROCESOS EXCLUSIVOS DE HARDWARE
+      # El estudiante puede agregar más steps aquí abajo
+      # ==========================================
+      - name: ⚙️ HW - Diseño de PCB
+        if: matrix.division == 'Hardware'
+        run: echo "Diseñando las pistas y componentes electrónicos."
 
-  desplegar_infra_prod:
-    if: github.ref == 'refs/heads/main'
-    needs: auditoria_seguridad_prod # Este sí espera a la auditoría
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Aplicando Terraform en AWS PROD"
+      - name: ⚙️ HW - Ensamblaje y Soldadura
+        if: matrix.division == 'Hardware'
+        run: echo "Soldando los microcontroladores en la placa."
