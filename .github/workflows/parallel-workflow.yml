@@ -1,0 +1,39 @@
+name: Despliegue Multi-Entorno
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  # ----------------------------------------
+  # JOBS PARA DESARROLLO (Corren en paralelo)
+  # ----------------------------------------
+  migrar_bd_dev:
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Ejecutando scripts específicos de BD para DEV"
+
+  desplegar_api_dev:
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Desplegando la API en el servidor de DEV"
+
+  # ----------------------------------------
+  # JOBS PARA PRODUCCIÓN (Totalmente distintos)
+  # ----------------------------------------
+  auditoria_seguridad_prod:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Corriendo escaneo severo solo requerido para PROD"
+
+  desplegar_infra_prod:
+    if: github.ref == 'refs/heads/main'
+    needs: auditoria_seguridad_prod # Este sí espera a la auditoría
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Aplicando Terraform en AWS PROD"
